@@ -1,23 +1,17 @@
 services:
-  grafana:
-    image: grafana/grafana:12.0.1
-    container_name: grafana
-    restart: unless-stopped
+  loki:
+    image: grafana/loki:latest
     ports:
-      - "3000:3000"
-
-  prom:
-    image: prom/prometheus:v3.4.0
-    container_name: prom
-    restart: unless-stopped
-    ports:
-      - "9090:9090"
+      - 3100:3100
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-
-  node_exporter:
-    image: prom/node-exporter:v1.9.1
-    container_name: node_exporter
-    restart: unless-stopped
+      - ./loki-config.yml:/etc/loki/loki-config.yaml
+  
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yaml
+  
+  grafana:
+    image: grafana/grafana
     ports:
-      - "9100:9100"
+      - 3000:3000
