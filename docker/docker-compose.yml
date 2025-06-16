@@ -9,8 +9,9 @@ services:
   promtail:
     image: grafana/promtail:latest
     volumes:
-      - ./promtail-config.yml:/etc/promtail/promtail-config.yaml
-  
+      - ./config.yml:/etc/promtail/config.yml
+      - /Users/sunil/Library/Logs/DiagnosticReports/:/var/log/mac:/var/log/mac  
+
   grafana:
     image: grafana/grafana
     ports:
