@@ -1,18 +1,26 @@
-services:
-  loki:
-    image: grafana/loki:latest
-    ports:
-      - 3100:3100
-    volumes:
-      - ./loki-config.yml:/etc/loki/loki-config.yaml
-  
-  promtail:
-    image: grafana/promtail:latest
-    volumes:
-      - ./config.yml:/etc/promtail/config.yml
-      - /Users/sunil/Library/Logs/DiagnosticReports/:/var/log/mac:/var/log/mac  
+services: 
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:12.0.0
+    container_name: grafana
     ports:
       - 3000:3000
+
+  prometheus:
+    image: prom/prometheus:v3.4.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.listen-address=:9090'
+
+  mongodb_exporter:
+    image: percona/mongodb_exporter:0.44
+    container_name: mongodb_exporter
+    ports:
+      - 9216:9216
+    environment:
+      MONGODB_URI: "mongodb://admin:admin@host.docker.internal:27017"
